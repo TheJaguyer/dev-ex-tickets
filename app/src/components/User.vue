@@ -1,5 +1,5 @@
 <script setup>
-import NewTicket from "./NewTicket.vue";
+import NewTicket from "./TicketFormComps/NewTicket.vue";
 </script>
 
 <template>
