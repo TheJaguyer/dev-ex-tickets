@@ -54,6 +54,7 @@ const subCats = ref({
         aria-label="category select"
         id="category"
         v-model="newTicket.category"
+        @change="newTicket.type = 'Select a type'"
       >
         <option selected disabled>Select a category</option>
         <option v-for="cat in Object.keys(subCats)" :value="cat">
@@ -62,20 +63,21 @@ const subCats = ref({
       </select>
       <!-- Type -->
       <label for="type" class="form-label">Type</label>
+      <!-- If no category is selected, render a nearly empty and disabled dropdown -->
       <select
         v-if="newTicket.category == 'Select a category'"
         class="form-select"
-        aria-label="category select"
+        aria-label="type select"
         id="type"
-        v-model="newTicket.type"
         disabled
       >
         <option selected disabled>Select a type</option>
       </select>
+      <!-- If a category IS selected, render an enabled version with the relevant options included -->
       <select
         v-else
         class="form-select"
-        aria-label="category select"
+        aria-label="type select"
         id="type"
         v-model="newTicket.type"
       >
@@ -84,26 +86,61 @@ const subCats = ref({
           {{ subCat }}
         </option>
       </select>
-      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <!-- Subject -->
+      <label for="subject" class="form-label">Subject</label>
       <input
-        type="email"
+        type="text"
         class="form-control"
-        id="exampleInputEmail1"
-        aria-describedby="emailHelp"
+        id="subject"
+        aria-describedby="subject field"
+        v-model="newTicket.subject"
       />
-      <div id="emailHelp" class="form-text">
-        We'll never share your email with anyone else.
+      <!-- Description -->
+      <label for="description" class="form-label">Description</label>
+      <input
+        type="text"
+        class="form-control"
+        id="description"
+        aria-describedby="description field"
+        v-model="newTicket.description"
+      />
+      <!-- Ticket Files & Documents -->
+      <label for="docs" class="form-label">Ticket Files & Documents</label>
+      <div>
+        <!-- The div here is used just to render the button as a block instead of an inline element-->
+        <button type="attach" class="btn btn-primary text-bg-light">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            class="bi bi-plus"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+            />
+          </svg>
+          Attach File
+        </button>
       </div>
+      <input
+        type="text"
+        class="form-control"
+        id="docs"
+        aria-describedby="docs field"
+        v-model="newTicket.docs"
+      />
     </div>
-    <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label">Password</label>
-      <input type="password" class="form-control" id="exampleInputPassword1" />
-    </div>
-    <div class="mb-3 form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-      <label class="form-check-label" for="exampleCheck1">Check me out</label>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      @click="console.log(newTicket)"
+      disabled
+    >
+      Submit
+    </button>
   </form>
 </template>
 
