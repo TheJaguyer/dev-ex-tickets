@@ -1,44 +1,8 @@
 <script setup>
 import { ref } from "vue";
+import { categories, blankTicket } from "./store.js";
 
-const newTicket = ref({
-  category: "Select a category",
-  type: "Select a type",
-  subject: "",
-  description: "",
-  docs: "",
-  time: 0,
-  user: "Doe",
-});
-
-// An object of lists, to help present only relevant 'types' in the form.
-// Note: I have added 'Other' to the final list for the sake of consistency.
-const subCats = ref({
-  Hardware: [
-    "Laptop",
-    "Mobile",
-    "Peripherals",
-    "Desk Phone",
-    "Printers",
-    "Other",
-  ],
-  Software: [
-    "Teams/Zoom",
-    "Mobile Blackberry",
-    "Adobe",
-    "Outlook",
-    "Microsoft Office",
-    "Other",
-  ],
-  Network: ["Network Access", "Connectivity", "VPN", "Drivers", "Other"],
-  "In-Processing": [
-    "Access Badge",
-    "Common Access Card (CAC)",
-    "SIPR",
-    "Trello",
-    "Other",
-  ],
-});
+const newTicket = ref({ ...blankTicket });
 </script>
 
 <template>
@@ -47,42 +11,39 @@ const subCats = ref({
     <div class="mb-3">
       <!-- Category -->
       <!-- Note: I have decided to use v-for in the case that new catagories are added later. 
-        It is much easier to simply modify the obejct above than to ensure the options are hardcoded to match-->
+        It is much easier to simply modify the obejct in the store above than to ensure the options are hardcoded to match
+        The @change line is there to clear the type selector whenever the category changes-->
       <label for="category" class="form-label">Category</label>
       <select
         class="form-select"
         aria-label="category select"
         id="category"
         v-model="newTicket.category"
-        @change="newTicket.type = 'Select a type'"
+        @change="newTicket.type = ''"
       >
-        <option selected disabled>Select a category</option>
-        <option v-for="cat in Object.keys(subCats)" :value="cat">
-          {{ cat }}
+        <option selected disabled hidden :value="''">Select a category</option>
+        <option v-for="category in Object.keys(categories)" :value="category">
+          {{ category }}
         </option>
       </select>
       <!-- Type -->
       <label for="type" class="form-label">Type</label>
       <!-- If no category is selected, render a nearly empty and disabled dropdown -->
-      <select
-        v-if="newTicket.category == 'Select a category'"
-        class="form-select"
-        aria-label="type select"
-        id="type"
-        disabled
-      >
-        <option selected disabled>Select a type</option>
-      </select>
       <!-- If a category IS selected, render an enabled version with the relevant options included -->
       <select
-        v-else
         class="form-select"
         aria-label="type select"
         id="type"
         v-model="newTicket.type"
+        :disabled="newTicket.category == ''"
       >
-        <option selected disabled>Select a type</option>
-        <option v-for="subCat in subCats[newTicket.category]" :value="subCat">
+        <option selected disabled hidden :value="newTicket.type">
+          Select a type
+        </option>
+        <option
+          v-for="subCat in categories[newTicket.category]"
+          :value="subCat"
+        >
           {{ subCat }}
         </option>
       </select>
@@ -124,23 +85,19 @@ const subCats = ref({
           Attach File
         </button>
       </div>
-      <input
-        type="text"
-        class="form-control"
-        id="docs"
-        aria-describedby="docs field"
-        v-model="newTicket.docs"
-      />
     </div>
+    <div class="container">
+      <button type="cancel" class="btn btn-primary">Cancel</button>
 
-    <button
-      type="submit"
-      class="btn btn-primary"
-      @click="console.log(newTicket)"
-      disabled
-    >
-      Submit
-    </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        @click="console.log(newTicket)"
+        disabled
+      >
+        Submit
+      </button>
+    </div>
   </form>
 </template>
 
