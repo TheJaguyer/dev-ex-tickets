@@ -38,7 +38,7 @@ export const blankTicket = reactive({
   type: "",
   subject: "",
   description: "",
-  docs: "",
+  docs: [],
   time: 0,
   user: "",
 });
