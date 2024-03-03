@@ -8,8 +8,10 @@ import User from "./components/User.vue";
 
 <template>
   <NavBar />
-  <Admin v-if="user.userMode == 'admin'" />
-  <User v-if="user.userMode == 'user'" />
+  <div class="container-fluid p-4">
+    <Admin v-if="user.userMode == 'admin'" />
+    <User v-if="user.userMode == 'user'" />
+  </div>
 </template>
 
 <style scoped></style>

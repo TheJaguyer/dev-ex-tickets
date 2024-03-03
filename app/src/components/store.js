@@ -46,6 +46,7 @@ const emptyTicket = {
   docs: [],
   time: 0,
   user: "",
+  status: "waiting",
 };
 
 // This ticket object is used extensively within the form.
@@ -63,6 +64,7 @@ export const ticket = reactive({
     docs: [],
     time: 0,
     user: "",
+    status: "waiting",
   },
   fileCount: 0,
   clear() {

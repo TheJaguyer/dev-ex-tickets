@@ -1,4 +1,6 @@
 <script setup>
+import { ref } from "vue";
+
 import { ticket, tickets } from "./store.js";
 
 import CategoryField from "./TicketFormChildren/CategoryField.vue";
@@ -6,6 +8,9 @@ import TypeField from "./TicketFormChildren/TypeField.vue";
 import SubjectField from "./TicketFormChildren/SubjectField.vue";
 import DescriptionField from "./TicketFormChildren/DescriptionField.vue";
 import DocumentsField from "./TicketFormChildren/DocumentsField.vue";
+
+// Used to toggle form validation through bootstrap
+const validated = ref(false);
 
 // This data validation isn't very robust. It just checks if there is anything in the first 4 fields.
 // If so, username and a timestamp are added to the ticket data, the ticket is added to the list,
@@ -26,21 +31,21 @@ function submit(event) {
     // "Manually" clicking the cancel button in code feels taboo, but it's the best way to make use of bootstrap's built in modal functionality.
     // Bootstrap uses 'data-bs-dismiss' to trigger its own js that smoothly puts the modal away in a multistep process.
   } else {
-    document.getElementById("formModal").classList.add("was-validated");
+    validated.value = true;
   }
 }
 
-// I would prefer not to use 'document' when using a framework like vue (feels like going behind vue's back),
-// but
 function cancel() {
   ticket.clear();
-  document.getElementById("formModal").classList.remove("was-validated");
+  validated.value = false;
 }
 </script>
 
 <template>
   <form
-    class="modal fade needs-validation"
+    :class="
+      'modal fade needs-validation' + (validated ? ' show was-validated' : '')
+    "
     novalidate
     tabindex="-1"
     id="formModal"
