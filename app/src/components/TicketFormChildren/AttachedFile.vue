@@ -1,5 +1,7 @@
 <script setup>
 const props = defineProps(["index"]);
+
+import { ticket } from "../store.js";
 </script>
 
 <!-- The majority of this template is the default bootstrap styling and functionality -->
@@ -17,7 +19,7 @@ const props = defineProps(["index"]);
       class="bi bi-trash align-middle"
       viewBox="0 0 16 16"
       role="button"
-      @click="$emit('deleteSelf', props.index)"
+      @click="ticket.deleteFile(props.index)"
     >
       <path
         d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"

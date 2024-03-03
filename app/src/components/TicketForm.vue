@@ -1,142 +1,87 @@
 <script setup>
-import { ref } from "vue";
-import { categories, blankTicket } from "./store.js";
-import AttachedFile from "./TicketFormChildren/AttachedFile.vue";
+import { ticket, tickets } from "./store.js";
 
-//  The 'docs' property needs to be set separately, or just the reference to the empty array will be used.
-// This leads to the original 'blankTicket' object to begin storing the files arr, which of course is bad.
-const newTicket = ref({ ...blankTicket, docs: [] });
-function resetTicket() {
-  newTicket.value = { ...blankTicket, docs: [] };
-  fileCount.value = 0;
+import CategoryField from "./TicketFormChildren/CategoryField.vue";
+import TypeField from "./TicketFormChildren/TypeField.vue";
+import SubjectField from "./TicketFormChildren/SubjectField.vue";
+import DescriptionField from "./TicketFormChildren/DescriptionField.vue";
+import DocumentsField from "./TicketFormChildren/DocumentsField.vue";
+
+// This data validation isn't very robust. It just checks if there is anything in the first 4 fields.
+// If so, username and a timestamp are added to the ticket data, the ticket is added to the list,
+// and by triggering the cancel button, the form is cleared.
+function submit(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  if (
+    ticket.data.category &&
+    ticket.data.type &&
+    ticket.data.subject &&
+    ticket.data.description
+  ) {
+    ticket.user();
+    ticket.time();
+    tickets.addTicket(ticket);
+    document.getElementById("cancel").click();
+    // "Manually" clicking the cancel button in code feels taboo, but it's the best way to make use of bootstrap's built in modal functionality.
+    // Bootstrap uses 'data-bs-dismiss' to trigger its own js that smoothly puts the modal away in a multistep process.
+  } else {
+    document.getElementById("formModal").classList.add("was-validated");
+  }
 }
 
-const fileCount = ref(0);
-function addFile() {
-  newTicket.value.docs.push(
-    "nameoffileattached" +
-      (fileCount.value == 0 ? "" : fileCount.value) +
-      ".ext"
-  );
-  fileCount.value++;
-}
-// Note: You may notice file-count does not go down. This is just to provide visual clarity
-// that you are in fact deleting specific files, and not just removing the most recent.
-function deleteFile(index) {
-  newTicket.value.docs.splice(index, 1);
+// I would prefer not to use 'document' when using a framework like vue (feels like going behind vue's back),
+// but
+function cancel() {
+  ticket.clear();
+  document.getElementById("formModal").classList.remove("was-validated");
 }
 </script>
 
 <template>
   <form
-    class="container-md position-absolute top-50 start-50 translate-middle bg-light border border-3 border-color-light rounded p-3"
-    style="max-width: 740px"
+    class="modal fade needs-validation"
+    novalidate
+    tabindex="-1"
+    id="formModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
   >
-    <h3 mb-3>Ticket Details</h3>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Ticket Details</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            @click="cancel"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <CategoryField />
+          <TypeField />
+          <SubjectField />
+          <DescriptionField />
+          <DocumentsField />
+        </div>
+        <div class="modal-footer">
+          <button
+            id="cancel"
+            type="cancel"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+            @click="cancel"
+          >
+            Cancel
+          </button>
 
-    <!-- Category -->
-    <!-- Note: I have decided to use v-for in the case that new catagories are added later. 
-        It is much easier to simply modify the obejct in the store above than to ensure the options are hardcoded to match
-        The @change line is there to clear the type selector whenever the category changes-->
-    <label for="category" class="form-label">Category</label>
-    <select
-      class="form-select mb-3"
-      aria-label="category select"
-      id="category"
-      v-model="newTicket.category"
-      @change="newTicket.type = ''"
-    >
-      <option selected disabled hidden :value="''">Select a category</option>
-      <option v-for="category in Object.keys(categories)" :value="category">
-        {{ category }}
-      </option>
-    </select>
-    <!-- Type -->
-    <label for="type" class="form-label">Type</label>
-    <!-- If no category is selected, render a nearly empty and disabled dropdown -->
-    <!-- If a category IS selected, render an enabled version with the relevant options included -->
-    <select
-      class="form-select mb-3"
-      aria-label="type select"
-      id="type"
-      v-model="newTicket.type"
-      :disabled="newTicket.category == ''"
-    >
-      <option selected disabled hidden :value="newTicket.type">
-        Select a type
-      </option>
-      <option v-for="subCat in categories[newTicket.category]" :value="subCat">
-        {{ subCat }}
-      </option>
-    </select>
-    <!-- Subject -->
-    <label for="subject" class="form-label">Subject</label>
-    <input
-      type="text"
-      class="form-control mb-3"
-      id="subject"
-      aria-describedby="subject field"
-      v-model="newTicket.subject"
-    />
-    <!-- Description -->
-    <label for="description" class="form-label">Description</label>
-    <input
-      type="text"
-      class="form-control mb-3"
-      id="description"
-      aria-describedby="description field"
-      v-model="newTicket.description"
-    />
-    <!-- Ticket Files & Documents -->
-    <label for="docs" class="form-label">Ticket Files & Documents</label>
-    <div class="row mb-3">
-      <div class="text-muted" v-if="newTicket.docs.length == 0">
-        Currently no attached files
+          <button type="submit" class="btn btn-primary" @click="submit">
+            Submit
+          </button>
+        </div>
       </div>
-      <AttachedFile
-        v-for="(file, index) in newTicket.docs"
-        @deleteSelf="deleteFile"
-        :index="index"
-        :key="index"
-        >{{ file }}</AttachedFile
-      >
-    </div>
-    <div class="mb-3">
-      <!-- The div here is used just to render the button as a block instead of an inline element-->
-      <button
-        type="attach"
-        class="btn btn-primary text-bg-light"
-        @click="addFile"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="26"
-          height="26"
-          fill="currentColor"
-          class="bi bi-plus"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
-          />
-        </svg>
-        Attach File
-      </button>
-    </div>
-
-    <div>
-      <button type="cancel" class="btn btn-primary" @click="resetTicket">
-        Cancel
-      </button>
-
-      <button
-        type="submit"
-        class="btn btn-primary"
-        @click="console.log(newTicket)"
-        disabled
-      >
-        Submit
-      </button>
     </div>
   </form>
 </template>
