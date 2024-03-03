@@ -1,55 +1,91 @@
 <script setup>
-import { tickets, user } from "./store.js";
+import { tickets } from "./store.js";
+
+function deleteTicket(index) {
+  tickets.removeTicket(index);
+}
 </script>
 
 <template>
   <div class="h4 mt-2">My Tickets</div>
 
-  <div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion accordion-flush" id="accordion">
     <div
       v-for="(ticket, index) in tickets.data"
-      :v-if="ticket.user == user.userName"
       :key="index"
       class="accordion-item"
     >
-      <h2 class="accordion-header" id="flush-headingOne">
+      <h2 class="accordion-header" :id="'flush-heading' + index">
         <button
           class="accordion-button collapsed"
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target="#flush-collapseOne"
+          :data-bs-target="'#flush-collapse' + index"
           aria-expanded="false"
-          aria-controls="flush-collapseOne"
+          :aria-controls="'flush-collapse' + index"
         >
-          {{ ticket.subject }}
+          <h5>
+            {{ ticket.subject }}
+          </h5>
         </button>
       </h2>
       <div
-        id="flush-collapseOne"
+        :id="'flush-collapse' + index"
         class="accordion-collapse collapse"
-        aria-labelledby="flush-headingOne"
-        data-bs-parent="#accordionFlushExample"
+        :aria-labelledby="'flush-heading' + index"
+        data-bs-parent="#accordion"
       >
         <div class="accordion-body">
-          Placeholder content for this accordion, which is intended to
-          demonstrate the <code>.accordion-flush</code> class. This is the first
-          item's accordion body.
+          <div class="row">
+            <div class="text-muted col-sm-3">Category</div>
+            <div class="col-sm">
+              {{ ticket.category }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="text-muted col-sm-3">Type</div>
+            <div class="col-sm">
+              {{ ticket.type }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="text-muted col-sm-3">Description</div>
+            <div class="col-sm">
+              {{ ticket.description }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="text-muted col-sm-3">Attached Files</div>
+            <div class="col-sm row">
+              <div
+                v-for="file in ticket.docs"
+                class="col-sm"
+                style="max-width: 240px"
+              >
+                <a class="link-primary text-decoration-none" role="button">
+                  {{ file }}
+                </a>
+              </div>
+
+              <div v-if="ticket.docs.length == 0" class="text-muted col-sm-3">
+                None
+              </div>
+            </div>
+          </div>
+          <button
+            class="btn btn-secondary"
+            data-bs-toggle="collapse"
+            :data-bs-target="'#flush-collapse' + index"
+            @click="deleteTicket(index)"
+          >
+            Delete Ticket
+          </button>
         </div>
       </div>
     </div>
-    <div v-if="tickets.data.length == 0" class="accordion-item">
-      <h2 class="accordion-header" id="flush-headingOne">
-        <div
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#flush-collapseOne"
-          aria-expanded="false"
-          aria-controls="flush-collapseOne"
-        >
-          You have no open tickets
-        </div>
-      </h2>
+    <!-- If this user has  -->
+    <div v-if="tickets.data.length == 0" class="text-muted">
+      You have no open tickets
     </div>
   </div>
 </template>

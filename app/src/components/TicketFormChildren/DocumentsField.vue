@@ -20,9 +20,9 @@ import AttachedFile from "./AttachedFile.vue";
   <div class="mb-3">
     <!-- The div here is used just to render the button as a block instead of an inline element-->
     <button
-      type="attach"
+      type="button"
       class="btn btn-primary text-bg-light"
-      @click="ticket.addFile()"
+      @click="ticket.addFile"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

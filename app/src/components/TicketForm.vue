@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 
-import { ticket, tickets } from "./store.js";
+import { ticket, tickets, user } from "./store.js";
 
 import CategoryField from "./TicketFormChildren/CategoryField.vue";
 import TypeField from "./TicketFormChildren/TypeField.vue";
@@ -24,7 +24,7 @@ function submit(event) {
     ticket.data.subject &&
     ticket.data.description
   ) {
-    ticket.user();
+    ticket.user(user.userName);
     ticket.time();
     tickets.addTicket(ticket);
     document.getElementById("cancel").click();
@@ -42,7 +42,7 @@ function cancel() {
 </script>
 
 <template>
-  <form
+  <div
     :class="
       'modal fade needs-validation' + (validated ? ' show was-validated' : '')
     "
@@ -74,7 +74,7 @@ function cancel() {
         <div class="modal-footer">
           <button
             id="cancel"
-            type="cancel"
+            type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
             @click="cancel"
@@ -82,13 +82,13 @@ function cancel() {
             Cancel
           </button>
 
-          <button type="submit" class="btn btn-primary" @click="submit">
+          <button type="button" class="btn btn-primary" @click="submit">
             Submit
           </button>
         </div>
       </div>
     </div>
-  </form>
+  </div>
 </template>
 
 <style scoped></style>

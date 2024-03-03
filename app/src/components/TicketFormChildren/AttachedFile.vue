@@ -1,7 +1,7 @@
 <script setup>
-const props = defineProps(["index"]);
-
 import { ticket } from "../store.js";
+
+const props = defineProps(["index"]);
 </script>
 
 <!-- The majority of this template is the default bootstrap styling and functionality -->
