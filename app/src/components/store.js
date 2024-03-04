@@ -40,7 +40,7 @@ export const tickets = reactive({
 
 const emptyTicket = {
   category: "",
-  type: "",
+  types: [],
   subject: "",
   description: "",
   docs: [],
@@ -58,7 +58,7 @@ const emptyTicket = {
 export const ticket = reactive({
   data: {
     category: "",
-    type: "",
+    types: [],
     subject: "",
     description: "",
     docs: [],
@@ -75,6 +75,12 @@ export const ticket = reactive({
   },
   user(name) {
     this.data.user = name;
+  },
+  addType(value) {
+    this.data.types.push(value);
+  },
+  deleteType(index) {
+    this.data.types.splice(index, 1);
   },
   addFile() {
     this.data.docs.push(

@@ -45,7 +45,7 @@ function deleteTicket(index) {
           <div class="row">
             <div class="text-muted col-sm-3">Type</div>
             <div class="col-sm">
-              {{ ticket.type }}
+              {{ ticket.types.join(", ") }}
             </div>
           </div>
           <div class="row">

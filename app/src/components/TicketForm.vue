@@ -20,7 +20,7 @@ function submit(event) {
   event.stopPropagation();
   if (
     ticket.data.category &&
-    ticket.data.type &&
+    ticket.data.types.length &&
     ticket.data.subject &&
     ticket.data.description
   ) {
