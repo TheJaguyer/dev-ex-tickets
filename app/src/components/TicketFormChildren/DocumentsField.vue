@@ -1,10 +1,12 @@
 <script setup>
 import { ticket } from "../store.js";
 import AttachedFile from "./AttachedFile.vue";
+
+// The attach documents piece of the form. When files are attached, the file names are given to the AttachedFile component.
+// When no files are attached, a 'No files Attached' message is displayed.
 </script>
 
 <template>
-  <!-- Ticket Files & Documents -->
   <div class="form-label">Ticket Files & Documents</div>
   <div class="row mb-3">
     <div class="text-muted" v-if="ticket.data.docs.length == 0">

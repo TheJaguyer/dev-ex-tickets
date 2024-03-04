@@ -1,9 +1,10 @@
 <script setup>
 import { ticket } from "../store.js";
+
+// An input field for the subject.
 </script>
 
 <template>
-  <!-- Subject -->
   <label for="subject" class="form-label">Subject</label>
   <input
     required

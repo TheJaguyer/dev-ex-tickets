@@ -2,9 +2,11 @@
 import { ticket } from "../store.js";
 
 const props = defineProps(["index"]);
+
+// This component renders the attached files in the form. Just the file name and a trashcan icon.
+// The slot is filled with the file name from the parent.
 </script>
 
-<!-- The majority of this template is the default bootstrap styling and functionality -->
 <template>
   <div class="col-sm d-flex justify-content-between" style="max-width: 240px">
     <a class="link-primary text-decoration-none" role="button">

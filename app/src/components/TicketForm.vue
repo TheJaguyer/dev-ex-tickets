@@ -13,7 +13,7 @@ import DocumentsField from "./TicketFormChildren/DocumentsField.vue";
 const validated = ref(false);
 
 // This data validation isn't very robust. It just checks if there is anything in the first 4 fields.
-// If so, username and a timestamp are added to the ticket data, the ticket is added to the list,
+// If so, the ticket is added to the list,
 // and by triggering the cancel button, the form is cleared.
 function submit(event) {
   event.preventDefault();
@@ -24,17 +24,17 @@ function submit(event) {
     ticket.data.subject &&
     ticket.data.description
   ) {
-    ticket.user(user.userName);
-    ticket.time();
     tickets.addTicket(ticket);
     document.getElementById("cancel").click();
-    // "Manually" clicking the cancel button in code feels taboo, but it's the best way to make use of bootstrap's built in modal functionality.
-    // Bootstrap uses 'data-bs-dismiss' to trigger its own js that smoothly puts the modal away in a multistep process.
+    // "Manually" clicking the cancel button in code feels taboo, but it's used to make use of bootstrap's built in modal functionality.
+    // Bootstrap uses 'data-bs-dismiss' to trigger its own js that smoothly puts the modal away in a multi-step process.
   } else {
     validated.value = true;
   }
 }
 
+// Cancelling resets the ticket file-count, and removes the validation styling.
+// This also happens whenever a correctly filled form is submitted.
 function cancel() {
   ticket.clear();
   validated.value = false;
@@ -42,6 +42,10 @@ function cancel() {
 </script>
 
 <template>
+  <!-- bootrap will add the 'show' class when the form modal is opened, 
+    so it must be included when 'was-validated' is added. The validation will 
+    only be triggered when the form is shown anyways.
+   -->
   <div
     :class="
       'modal fade needs-validation' + (validated ? ' show was-validated' : '')

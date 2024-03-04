@@ -1,14 +1,12 @@
 //  A simple state-management solution. Pinia could also be used,
-//  but this project is relatively simple. Still, prop drilling on it's own is annoying.
+//  but this project is relatively simple.
 
 import { reactive, ref } from "vue";
 
 // ----- General -----
 
-// This object would likely be loaded from a database or come from some form of login and authentication.
-// For this project, I have chosen to allow 2 views to showcase possible utilization of the tickets object.
-// When on the 'Admin' screen, the username is irrelevant, but on the 'User' screen, it is added to new tickets,
-// so that Help Desk personnel can see who is having trouble.
+// This object would likely be loaded from a database or be replaced by some form of login and authentication.
+// You can currently change mode using the navbar, which is just for fun.
 export const user = reactive({
   userName: "Doe",
   userMode: "user",
@@ -21,17 +19,17 @@ export const user = reactive({
 
 // An object for the full list of tickets.
 // In a more realistic scenario, the tickets array would likely require a method for requesting the data from a database.
+// - data is the current list of tickets.
+// - addTicket(ticket) takes a ticket object and adds the data to the list of tickets.
+// - removeTicket(index) removes a ticket from the list.
 export const tickets = reactive({
-  total: 0,
   data: [],
   addTicket(ticket) {
     this.data.push(JSON.parse(JSON.stringify(ticket.data)));
-    this.total++;
   },
   removeTicket(index) {
     if (index < this.data.length && index > -1) {
       this.data.splice(index, 1);
-      this.total--;
     }
   },
 });
@@ -44,17 +42,16 @@ const emptyTicket = {
   subject: "",
   description: "",
   docs: [],
-  time: 0,
-  user: "",
-  status: "waiting",
 };
 
 // This ticket object is used extensively within the form.
-// data is the currently used ticket
-// fileCount is used to modify the file names when generated
-// clear() empties the ticket
-// addFile() adds a new feaux file to the docs list
-// deleteFile() removes a file from the list using an index
+// - data contains the currently-used ticket
+// - fileCount is used to modify the file names when generated
+// - clear() empties the ticket by replacing it with a clone of the above emptyTicket object, and resets the file count.
+// - addType(value) adds a type from the dropdown to the list of types, if it is not present already
+// - deleteType(index) removes a type
+// - addFile() adds a new feaux file to the docs list
+// - deleteFile() removes a file from the list using an index
 export const ticket = reactive({
   data: {
     category: "",
@@ -62,22 +59,16 @@ export const ticket = reactive({
     subject: "",
     description: "",
     docs: [],
-    time: 0,
-    user: "",
-    status: "waiting",
   },
   fileCount: 0,
   clear() {
+    this.fileCount = 0;
     this.data = JSON.parse(JSON.stringify(emptyTicket));
   },
-  time() {
-    this.data.time = Date.now();
-  },
-  user(name) {
-    this.data.user = name;
-  },
   addType(value) {
-    this.data.types.push(value);
+    if (!this.data.types.includes(value)) {
+      this.data.types.push(value);
+    }
   },
   deleteType(index) {
     this.data.types.splice(index, 1);
@@ -95,15 +86,7 @@ export const ticket = reactive({
   },
 });
 
-// Used to provide visual feedback to validation. 'false' means no error.
-// export const errors = reactive({
-//   category: false,
-//   type: false,
-//   subject: false,
-//   description: false,
-// });
-
-// An object of arrays, to help present only relevant 'types' in the form.
+// An object of arrays, to help present only relevant categories and types in the form.
 // Note: I have added 'Other' to the final list for the sake of consistency.
 export const categories = reactive({
   Hardware: [

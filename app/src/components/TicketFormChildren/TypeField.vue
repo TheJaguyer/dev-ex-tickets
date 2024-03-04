@@ -2,22 +2,23 @@
 import { categories, ticket } from "../store.js";
 
 function addType(event) {
-  if (!ticket.data.types.includes(event.target.value)) {
-    ticket.addType(event.target.value);
-  }
+  ticket.addType(event.target.value);
 }
 
 function deleteType(index) {
   ticket.deleteType(index);
 }
+
+// The 'type' dropdown. I did not like the look of bootstrap's multi-dropdown,
+// so I used a regular dropdown that adds a type to the type array on change.
+// The type options are filled from the categories object in the store,
+// using the selected category to grab the correct array. If no category is
+// selected, the type dropdown will be disabled.
 </script>
 
 <template>
-  <!-- Type -->
   <div class="container px-0">
     <label for="type" class="form-label">Type</label>
-    <!-- If no category is selected, render a nearly empty and disabled dropdown -->
-    <!-- If a category IS selected, render an enabled version with the relevant options included -->
     <select
       required
       class="form-select"

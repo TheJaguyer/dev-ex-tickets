@@ -1,9 +1,10 @@
 <script setup>
 import { ticket } from "../store.js";
+
+// A text input for the ticket description.
 </script>
 
 <template>
-  <!-- Description -->
   <label for="description" class="form-label">Description</label>
   <input
     required

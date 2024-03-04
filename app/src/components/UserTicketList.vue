@@ -4,6 +4,8 @@ import { tickets } from "./store.js";
 function deleteTicket(index) {
   tickets.removeTicket(index);
 }
+
+// Accordian for array of tickets. Simply displays the data, with a delete button at the bottom.
 </script>
 
 <template>

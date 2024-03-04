@@ -1,7 +1,7 @@
 <script setup>
 import { user } from "./store.js";
 
-// Just to keep tags small for readability, I have moved some code that adds the 'active' class to navbar tabs up here.
+// These functions just toggle the 'active' class of the navbar links when a tab is selected.
 function adminActive() {
   return ["nav-link", user.userMode == "admin" ? "active" : ""];
 }
@@ -9,9 +9,10 @@ function adminActive() {
 function userActive() {
   return ["nav-link", user.userMode == "user" ? "active" : ""];
 }
+
+// The entire navbar is ultimately irrelevant, but I like the way it looks.
 </script>
 
-<!-- The majority of this template is the default bootstrap styling and functionality -->
 <template>
   <nav class="navbar navbar-expand-sm bg-body-tertiary">
     <div class="container-fluid">
@@ -32,6 +33,7 @@ function userActive() {
           <li class="nav-item" @click="user.changeMode('admin')">
             <a :class="adminActive()" href="#">Admins</a>
           </li>
+
           <li class="nav-item" @click="user.changeMode('user')">
             <a :class="userActive()" href="#">Users</a>
           </li>

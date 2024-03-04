@@ -1,11 +1,12 @@
 <script setup>
 import TicketForm from "./TicketForm.vue";
 import UserTicketList from "./UserTicketList.vue";
-import { user, tickets } from "./store.js";
+import { user } from "./store.js";
+
+// The user view. The ticket form is always rendered, even when invisible, to allow bootrap to bring it in smoothly.
 </script>
 
 <template>
-  <TicketForm />
   <div class="h3">Welcome, {{ user.userName }}</div>
   <button
     type="newTicket"
@@ -16,6 +17,7 @@ import { user, tickets } from "./store.js";
     Open a Ticket
   </button>
   <UserTicketList />
+  <TicketForm />
 </template>
 
 <style scoped></style>
