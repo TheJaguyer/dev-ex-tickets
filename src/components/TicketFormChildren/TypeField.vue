@@ -27,7 +27,9 @@ function deleteType(index) {
       @change="addType"
       :disabled="ticket.data.category == ''"
     >
-      <option selected disabled hidden :value="''">Select a type</option>
+      <option selected disabled hidden value="">
+        Select one or multiple types
+      </option>
       <option
         v-for="subCat in categories[ticket.data.category]"
         :value="subCat"

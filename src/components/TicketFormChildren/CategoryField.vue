@@ -13,7 +13,7 @@ import { categories, ticket } from "../store.js";
     aria-label="category select"
     id="category"
     v-model="ticket.data.category"
-    @change="ticket.data.type = ''"
+    @change="ticket.data.types = []"
   >
     <option selected disabled hidden :value="''">Select a category</option>
     <option v-for="category in Object.keys(categories)" :value="category">
